@@ -21,7 +21,7 @@ namespace Eticaret.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-H4G3VPU\SQLEXPRESS; Database=EticaretDB; Trusted_Connection=True; TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer(@"Server=DESKTOP-O4UDBAE\SQLEXPRESS; Database=EticaretDB; Trusted_Connection=True; TrustServerCertificate=True");
 
             optionsBuilder.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
 
