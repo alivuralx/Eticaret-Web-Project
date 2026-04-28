@@ -1,0 +1,58 @@
+﻿@{
+	ViewData["Title"] = "Admin Anasayfa";
+}
+
+
+
+<div class="card mb-4">
+	<div class="card-header">
+		<i class="fas fa-table me-1"></i>
+		Ürünler
+	</div>
+	<div class="card-body">
+		<table id="datatablesSimple">
+			<thead>
+				<tr>
+					<th>Ürün Adı</th>
+					<th>Kayıt Tar</th>
+					<th>Resim</th>
+					<th>Fiyat</th>
+					<th>Ürün Kodu</th>
+					<th>Stok</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<th>Ürün Adı</th>
+					<th>Kayıt Tar</th>
+					<th>Resim</th>
+					<th>Fiyat</th>
+					<th>Ürün Kodu</th>
+					<th>Stok</th>
+				</tr>
+			</tfoot>
+			<tbody>
+				@foreach (var item in ViewBag.Products)
+				{
+					<tr>
+						<td>@item.Name</td>
+						<td>@item.CreateDate</td>
+						<td>@item.Image</td>
+						<td>@item.Price</td>
+						<td>@item.ProductCode</td>
+						<td>@item.Stock</td>
+					</tr>
+				}			
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+@section Scripts{
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+	<script src="/admin/assets/demo/chart-area-demo.js"></script>
+	<script src="/admin/assets/demo/chart-bar-demo.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+	<script src="/admin/js/datatables-simple-demo.js"></script>
+}

@@ -1,3 +1,10 @@
+using Eticaret.Data;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
+using Eticaret.Service.Abstract;
+using Eticaret.Service.Concrate;
+
 namespace EticaretWebUI
 {
     public class Program
@@ -8,6 +15,35 @@ namespace EticaretWebUI
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddSession(options =>
+            {
+                options.Cookie.Name = ".Eticaret.Session";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan.FromDays(1);
+                options.IOTimeout = TimeSpan.FromMinutes(10);
+            });
+
+
+            builder.Services.AddDbContext<DatabaseContext>();
+
+            builder.Services.AddScoped(typeof(IService<>), typeof(Service<>));
+
+           builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
+            {
+                x.LoginPath = "/Account/SignIn";
+                x.AccessDeniedPath = "/AccessDenied";
+                x.Cookie.Name = "Account";
+                x.Cookie.MaxAge = TimeSpan.FromDays(7);
+                x.Cookie.IsEssential = true;
+            });
+
+            builder.Services.AddAuthorization(x =>
+            {
+                x.AddPolicy("AdminPolicy", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
+                x.AddPolicy("UserPolicy", policy => policy.RequireClaim(ClaimTypes.Role, "Admin", "User", "Customer"));
+            });
 
             var app = builder.Build();
 
@@ -24,7 +60,13 @@ namespace EticaretWebUI
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseSession(); //session kullan
+
+            app.UseAuthentication(); // önce oturum açma
+            app.UseAuthorization(); // sonra yetkilendirme
+            app.MapControllerRoute(
+            name: "admin",
+            pattern: "{area:exists}/{controller=Main}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
                 name: "default",
